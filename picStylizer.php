@@ -3,11 +3,14 @@
 /**
  * Create a Css style and sprite from images
  * 
- * @version 1.0
+ * @version 1.1
  * @link https://github.com/lutian/picStylizer
  * @author Lutian (Luciano Salvino)
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Luciano Salvino
+ *
+ * Thanks Aldo Conte for improvements on script!
+ * Reduces the size of CSS script and sprite in a big way
  */
  
  class picStylizer {
@@ -75,7 +78,7 @@
 	/**
      * @var string version
      */
-	private $version = '1.0';
+	private $version = '1.1';
 	
 	/**
      * @var array folders_config folder
@@ -229,8 +232,11 @@
 	*/
 	private function calculateSpriteWidthHeight($image) {
 		if(is_file($image)) {
-            $arrImage = @getimagesize($image);
-			$this->im_w += $arrImage[0]+$this->temp_sep;
+      $arrImage = @getimagesize($image);
+			// updated by Aldo Conte			
+			$tmps =	$arrImage[0]+$this->temp_sep;
+			if ($tmps > $this->im_w) $this->im_w = $arrImage[0]+$this->temp_sep;
+			// end
 			$this->im_h += $arrImage[1]+$this->temp_sep;
 		}
 	}
@@ -247,8 +253,6 @@
 			$this->temp_h = $arrImage[1];
 			
 			$tmp = ImageCreateTrueColor($this->im_w, $this->im_h);
-			//$black = imagecolorallocate($this->im,0, 0, 0);
-			//imagecolortransparent($this->im, $black);
 			imagealphablending($tmp, false);
 			$col=imagecolorallocatealpha($tmp,255,255,255,0);
 			imagefilledrectangle($tmp,0,0,$this->im_w, $this->im_h,$col);
@@ -274,13 +278,14 @@
 
 			imagecopyresampled($tmp, $this->im, 0, 0, 0, 0, $this->im_w, $this->im_h, $this->im_w, $this->im_h);
 			imagealphablending($tmp,true);
-			//imagedestroy($this->temp);
 			
 			// add each image to sprite
 			
-			imagecopyresampled($this->im, $this->temp, $this->im_x, $this->im_y, 0, 0, $this->temp_w, $this->temp_h, $this->temp_w, $this->temp_h);
+			// updated by Aldo Conte
+			imagecopyresampled($this->im, $this->temp, 0, $this->im_y, 0, 0, $this->temp_w, $this->temp_h, $this->temp_w, $this->temp_h);  
+			// end
+			
 			imagealphablending($this->im,true);
-			//imagedestroy($tmp);
 			
 			$ext = substr($image, strrpos($image, '.'));
 			
@@ -303,8 +308,12 @@
 	private function genCssPieceCode($name) {
 		// if filename contain "_hover" add the part of code
 		if(strpos($name,"_hover")!==false) $name = substr($name,0,-6).':hover';
-		$temp_css_detail = "background: url('".$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['sprites']."') -".$this->im_x."px -".$this->im_y."px no-repeat;".$this->temp_min_sep;
-		$temp_css_detail .= "width: ".$this->temp_w."px; height: ".$this->temp_h."px;".$this->temp_min_sep;
+		
+		// updated by Aldo Conte
+		$temp_css_detail = "background:url('".$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['sprites']."') 0 -".$this->im_y."px no-repeat;".$this->temp_min_sep;
+		// end
+		
+		$temp_css_detail .= "width:".$this->temp_w."px; height:".$this->temp_h."px".$this->temp_min_sep;
 		$temp_css = ".".$name." {".$temp_css_detail."}".$this->temp_min_sep;
 		$this->temp_css .= $temp_css;
 	}
