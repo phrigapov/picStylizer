@@ -3,7 +3,7 @@
 /**
  * Create a Css style and sprite from images
  * 
- * @version 1.1
+ * @version 1.11
  * @link https://github.com/lutian/picStylizer
  * @author Lutian (Luciano Salvino)
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
