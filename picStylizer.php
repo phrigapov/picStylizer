@@ -340,7 +340,7 @@
         if (strpos($name, "_hover") === false)
         {
             $temp_html = '<h3>class: .' . $this->class_prefix . $name . '</h3>';
-            $temp_html .= '<div class="'.$this->class_prefix.'-each ' . $this->class_prefix . $name . '">';
+            $temp_html .= '<div class="'.$this->class_prefix.'each ' . $this->class_prefix . $name . '">';
             $temp_html .= '</div>';
             $this->temp_html .= $temp_html;
         }
@@ -354,7 +354,7 @@
 	
 	private function saveCss() {
         $css_path = $this->folders_config['destination']['styles'];
-        $css_img = '.'.$this->class_prefix.'-each{background-image:url("' . $this->folders_config['destination']['rel_path_to_sprite_image'] . basename($this->folders_config['destination']['sprites']) . '");';
+        $css_img = '.'.$this->class_prefix.'each{background-image:url("' . $this->folders_config['destination']['rel_path_to_sprite_image'] . basename($this->folders_config['destination']['sprites']) . '");';
         file_put_contents($css_path, $this->css_init . $this->temp_css . $css_img);
 	}
 	
