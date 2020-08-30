@@ -15,6 +15,8 @@ icon_hover.png //adding _hover
 # Usage
 
 ```php
+include("./picStylizer.php");
+
 // Initialize Class
 $pS = new picStylizer();
 
