@@ -85,13 +85,14 @@
      */
 	private $folders_config = array(
 								"origin" => array(
-									"images" => "origin/images"
-								),
-								"destiny" => array(
-									"styles" => "destiny/css/sprites.css",
-									"sprites" => "destiny/sprites/sprites.png",
-									"example" => "destiny/example/sprites.html",
-									"ini_path" => "../../"
+									"images" => "origin/images",
+									"include_subfolders" => true
+								), 
+								"destination" => array(
+									"styles" => "destination/css/sprites.css",
+									"sprites" => "destination/sprites/sprites.png",
+									"rel_path_to_sprite_image" => "./",
+									"example" => "destination/example/sprites.html",
 								)
 							);
 	/*
@@ -139,7 +140,8 @@
 				// if have sub folders loop on the same function
 				if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
 				{ 
-					$result[$value] = $this->readFolder($dir . DIRECTORY_SEPARATOR . $value); 
+					if ($this->folders_config["origin"]["include_subfolders"])
+						$result[$value] = $this->readFolder($dir . DIRECTORY_SEPARATOR . $value); 
 				} 
 				else 
 				{ 
@@ -154,6 +156,12 @@
 		   
 		return $result; 
 	}
+	
+	
+	/*
+	* Include subfolders or not
+	*/
+	
 	
 	/*
 	* get the images info from array
@@ -229,7 +237,7 @@
 		
 		if ($redirect)
         {
-            header('location:' . $this->folders_config['destiny']['example']);
+            header('location:' . $this->folders_config['destination']['example']);
             exit();
         }
 	
@@ -332,27 +340,27 @@
         if (strpos($name, "_hover") === false)
         {
             $temp_html = '<h3>class: .' . $this->class_prefix . $name . '</h3>';
-            $temp_html .= '<div class="sprite-each ' . $this->class_prefix . $name . '">';
+            $temp_html .= '<div class="'.$this->class_prefix.'-each ' . $this->class_prefix . $name . '">';
             $temp_html .= '</div>';
             $this->temp_html .= $temp_html;
         }
 	}
 	
 	private function saveSprite() {
-		imagepng($this->im,$this->folders_config['destiny']['sprites'],3); 
+		imagepng($this->im,$this->folders_config['destination']['sprites'],3); 
 		return $this->im;
 		imagedestroy($this->im);
 	}
 	
 	private function saveCss() {
-        $css_path = $this->folders_config['destiny']['styles'];
-        $css_img = '.sprite-each{background-image:url("' . $this->folders_config['destiny']['ini_path'] . $this->folders_config['destiny']['sprites'] . '");';
+        $css_path = $this->folders_config['destination']['styles'];
+        $css_img = '.'.$this->class_prefix.'-each{background-image:url("' . $this->folders_config['destination']['rel_path_to_sprite_image'] . basename($this->folders_config['destination']['sprites']) . '");';
         file_put_contents($css_path, $this->css_init . $this->temp_css . $css_img);
 	}
 	
 	private function saveHtml() {
-		$html_path = $this->folders_config['destiny']['example'];
-		$html = '<link rel="stylesheet" href="'.$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['styles'].'">'.$this->temp_html;
+		$html_path = $this->folders_config['destination']['example'];
+		$html = '<link rel="stylesheet" href="'.$this->folders_config['destination']['rel_path_to_sprite_css']. basename($this->folders_config['destination']['styles']).'">'.$this->temp_html;
 		file_put_contents($html_path,$html);
 	}
  
