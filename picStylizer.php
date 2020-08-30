@@ -228,10 +228,10 @@
 		
 		
 		if ($redirect)
-		{
-			header('location:' . $this->folders_config['destiny']['example']);
-			exit();
-		}
+        {
+            header('location:' . $this->folders_config['destiny']['example']);
+            exit();
+        }
 	
 	}
 	
@@ -432,7 +432,7 @@
      * 
      * @return string
 	 */
-	public function setCssInit($style) {
+	public function setCssInit($style, $class_prefix) {
 		$this->class_prefix = empty($class_prefix) ? "" : $class_prefix.'-';
         $this->css_init = $style . $this->temp_min_sep;
 	}
