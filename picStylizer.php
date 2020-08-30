@@ -175,7 +175,6 @@
 		foreach($dir as $key => $value){
 			if(!is_int($key)) {
 				$this->getImagesFromDir($value,$subdir . $key . DIRECTORY_SEPARATOR);
-	
 			} else {
 				$this->proccessMedia($this->folders_config["origin"]["images"] . DIRECTORY_SEPARATOR . $subdir . $value);
 			}
@@ -186,7 +185,6 @@
 	* create the sprite
 	*/
 	private function createSprite($save_html = true, $redirect = true) {
-		
 		$arrImages = $this->getSprites();
 
 		
@@ -215,7 +213,6 @@
 			
 			// save the example html
 			if ($save_html) $this->saveHtml();
-		
 		}
 		
 		if ($redirect)
@@ -224,7 +221,6 @@
 			exit();
 		}
 	
-
 	}
 	
 	/*
@@ -270,12 +266,10 @@
               if (!$this->temp = imagecreatefromjpeg($image)) {
                     exit;
               }
-	
             } else if(strtolower($gd_ext) == "png") {
               if (!$this->temp = imagecreatefrompng($image)) {
                     exit;
               }
-	
             } else {
                 die;
             }
@@ -303,17 +297,12 @@
 			$this->im_x += $this->temp_w+$this->temp_sep;
 			$this->im_y += $this->temp_h+$this->temp_sep;
 			
-   
 		} else {
-   
             die;
         }
 	}
 	
-
-
 	private function genCssPieceCode($name) {
-  
 		// if filename contain "_hover" add the part of code
 		if(strpos($name,"_hover")!==false) $name = substr($name,0,-6).':hover';
 		
@@ -326,8 +315,7 @@
 		$this->temp_css .= $temp_css;
 	}
 	
-	private function genHtmlPieceCode($name) {
-  
+	private function genHtmlPieceCode($name) {  
 	// if filename contain "_hover" add the part of code
 		if(strpos($name,"_hover")===false) {
 			$temp_html = '<h3>class: .sprite-' . $name . '</h3>';
@@ -422,7 +410,6 @@
      * @return string
 	 */
 	public function setMinization($obs = true) {
-  
 		if($obs) $this->temp_min_sep = '';
 		else $this->temp_min_sep = "\n";
 	}
