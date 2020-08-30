@@ -3,7 +3,7 @@
 /**
  * Create a Css style and sprite from images
  * 
- * @version 1.1
+ * @version 1.11
  * @link https://github.com/lutian/picStylizer
  * @author Lutian (Luciano Salvino)
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -15,6 +15,7 @@
  
  class picStylizer {
  
+
     /**
      * @var string The image result source
      */
@@ -109,7 +110,7 @@
     * @return: string $imageResult image result path
     */
     
-    public function getSprite()
+    public function getSprite($save_html = true, $redirect = true)
     {
     
         // first read the origin folder looking for png pictures
@@ -119,7 +120,7 @@
         $this->setSprite($arrImages);
         
         // create the sprite
-        $this->createSprite();
+        $this->createSprite($save_html, $redirect);
 
     }
     
@@ -128,6 +129,9 @@
     * @return: array $result 
     */
     private function readFolder($dir='',$acceptedformats=array('png')) {
+			 
+	  
+	 
         $result = array(); 
         $cdir = scandir($dir); 
         // read origin dir
@@ -135,6 +139,9 @@
         { 
             // exclude non files
             if (!in_array($value,array(".",".."))) 
+					
+					
+			   
             { 
                 // if have sub folders loop on the same function
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
@@ -146,6 +153,7 @@
                     // exclude files with extentions not accepted
                     $ext = strtolower(substr($value, strrpos($value, '.') + 1));
                     if(in_array($ext, $acceptedformats)) {
+					 
                         $result[] = $value; 
                     }
                 } 
@@ -160,10 +168,15 @@
     */
     private function getImageInfoFromDir($dir,$subdir='') {
     
+
         foreach($dir as $key => $value){
+		 
             if(!is_int($key)) {
+			 
                 $this->getImageInfoFromDir($value,$subdir . $key . DIRECTORY_SEPARATOR);
+			 
             } else {
+			 
                 $this->calculateSpriteWidthHeight($this->folders_config["origin"]["images"] . DIRECTORY_SEPARATOR . $subdir . $value);
             }
         }
@@ -173,10 +186,15 @@
     * get the images info from array
     */
     private function getImagesFromDir($dir,$subdir='') {
+	 
         foreach($dir as $key => $value){
+		 
             if(!is_int($key)) {
+			 
                 $this->getImagesFromDir($value,$subdir . $key . DIRECTORY_SEPARATOR);
+			 
             } else {
+			 
                 $this->proccessMedia($this->folders_config["origin"]["images"] . DIRECTORY_SEPARATOR . $subdir . $value);
             }
         }
@@ -185,13 +203,15 @@
     /*
     * create the sprite
     */
-    private function createSprite() {
+    private function createSprite($save_html = true, $redirect = true)
     
+
         $arrImages = $this->getSprites();
 
         
         if(count($arrImages)>0) {
         
+
             // calculate sprite width and height
             $this->getImageInfoFromDir($arrImages); 
         
@@ -214,15 +234,18 @@
             $this->saveCss();
             
             // save the example html
-            $this->saveHtml();
+            if ($save_html) $this->saveHtml();
         
         }
         
         
-        
-        header('location:'.$this->folders_config['destiny']['example']);
-        exit();
+        if ($redirect)
+        {
+            header('location:' . $this->folders_config['destiny']['example']);
+            exit();
+        }
     
+
     }
     
     /*
@@ -231,7 +254,9 @@
     * @return: object $this->temp 
     */
     private function calculateSpriteWidthHeight($image) {
+	 
         if(is_file($image)) {
+		 
       $arrImage = @getimagesize($image);
             // updated by Aldo Conte            
             $tmps =    $arrImage[0]+$this->temp_sep;
@@ -247,7 +272,9 @@
     * @return: object $this->temp 
     */
     private function proccessMedia($image) {
+	 
         if(is_file($image)) {
+		 
             $arrImage = @getimagesize($image);
             $this->temp_w = $arrImage[0];
             $this->temp_h = $arrImage[1];
@@ -261,18 +288,28 @@
             $gd_ext = substr($image, -3);
             
             if(strtolower($gd_ext) == "gif") {
+			 
               if (!$this->temp = imagecreatefromgif($image)) {
+				 
                     exit;
               }
+			 
             } else if(strtolower($gd_ext) == "jpg") {
+			 
               if (!$this->temp = imagecreatefromjpeg($image)) {
+				 
                     exit;
               }
+			 
             } else if(strtolower($gd_ext) == "png") {
+			 
               if (!$this->temp = imagecreatefrompng($image)) {
+				 
                     exit;
               }
+			 
             } else {
+			 
                 die;
             }
 
@@ -300,46 +337,54 @@
             $this->im_x += $this->temp_w+$this->temp_sep;
             $this->im_y += $this->temp_h+$this->temp_sep;
             
+		 
         } else {
+		 
             die;
         }
     }
     
     private function genCssPieceCode($name) {
+	 
         // if filename contain "_hover" add the part of code
         if(strpos($name,"_hover")!==false) $name = substr($name,0,-6).':hover';
         
         // updated by Aldo Conte
-        $temp_css_detail = "background:url('".$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['sprites']."') 0 -".$this->im_y."px no-repeat;".$this->temp_min_sep;
+        $temp_css_detail = "background-position: 0 -" . $this->im_y . "px; background-repeat:no-repeat;" . $this->temp_min_sep;
         // end
-        
-        $temp_css_detail .= "width:".$this->temp_w."px; height:".$this->temp_h."px".$this->temp_min_sep;
-        $temp_css = ".".$name." {".$temp_css_detail."}".$this->temp_min_sep;
+		
+        $temp_css_detail .= "width:" . $this->temp_w . "px; height:" . $this->temp_h . "px" . $this->temp_min_sep;
+        $temp_css = ".sprite-" . $name . " {" . $temp_css_detail . "}" . $this->temp_min_sep;
         $this->temp_css .= $temp_css;
     }
     
     private function genHtmlPieceCode($name) {
+	 
     // if filename contain "_hover" add the part of code
         if(strpos($name,"_hover")===false) {
-            $temp_html = '<h3>class: '.$name.'</h3>';
-            $temp_html .= '<div class="'.$name.'">';
-            $temp_html .= '</div>';
-            $this->temp_html .= $temp_html;    
+            $temp_html = '<h3>class: .sprite-' . $name . '</h3>';
+            $temp_html .= '<span class="sprite-each sprite-' . $name . '">';
+            $temp_html .= '</span>';
+            $this->temp_html .= $temp_html;
         }
     }
     
     private function saveSprite() {
+	 
         imagepng($this->im,$this->folders_config['destiny']['sprites'],3); 
         return $this->im;
         imagedestroy($this->im);
     }
     
     private function saveCss() {
+	 
         $css_path = $this->folders_config['destiny']['styles'];
-        file_put_contents($css_path,$this->css_init.$this->temp_css);
+        $css_img = '.sprite-each{background-image:url("' . $this->folders_config['destiny']['ini_path'] . $this->folders_config['destiny']['sprites'] . '");';
+        file_put_contents($css_path, $this->css_init . $this->temp_css . $css_img);
     }
     
     private function saveHtml() {
+	 
         $html_path = $this->folders_config['destiny']['example'];
         $html = '<link rel="stylesheet" href="'.$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['styles'].'">'.$this->temp_html;
         file_put_contents($html_path,$html);
@@ -412,6 +457,7 @@
      * @return string
      */
     public function setMinization($obs = true) {
+	 
         if($obs) $this->temp_min_sep = '';
         else $this->temp_min_sep = "\n";
     }
@@ -422,6 +468,7 @@
      * @return string
      */
     public function setCssInit($style) {
+	 
         $this->css_init = $style.$this->temp_min_sep;
     }
     
@@ -436,3 +483,5 @@
     }
  
  }
+
+ 
