@@ -2,13 +2,13 @@
 
 picStylizer is a PHP class that create sprite and css style file from images folder
 
-Notice: if you want to change the image onMouseOver (hover) you have add "_hover" at the end of filename before the extention
+Notice: if you want to change the image onMouseOver (hover) you have add "_hover" at the end of filename before the extention. Example: 
 ```
-Example: 
 // initial image
 icon.png
 // hover image
-icon_hover.png //adding _hover
+icon_hover.png
+
 // the result css code will be:
 .icon {...}
 .icon:hover {...}
