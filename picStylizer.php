@@ -228,10 +228,10 @@
 		
 		
 		if ($redirect)
-        {
-            header('location:' . $this->folders_config['destiny']['example']);
-            exit();
-        }
+		{
+			header('location:' . $this->folders_config['destiny']['example']);
+			exit();
+		}
 	
 	}
 	
