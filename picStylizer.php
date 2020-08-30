@@ -15,7 +15,6 @@
  
  class picStylizer {
  
-
 	/**
      * @var string The image result source
      */
@@ -129,9 +128,6 @@
 	* @return: array $result 
 	*/
 	private function readFolder($dir='',$acceptedformats=array('png')) {
-	   
-   
-  
 		$result = array(); 
 		$cdir = scandir($dir); 
 		// read origin dir
@@ -139,9 +135,6 @@
 		{ 
 			// exclude non files
 			if (!in_array($value,array(".",".."))) 
-		
-		
-	  
 			{ 
 				// if have sub folders loop on the same function
 				if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
@@ -153,7 +146,6 @@
 					// exclude files with extentions not accepted
 					$ext = strtolower(substr($value, strrpos($value, '.') + 1));
 					if(in_array($ext, $acceptedformats)) {
-	  
 						$result[] = $value; 
 					}
 				} 
@@ -167,16 +159,10 @@
 	* get the images info from array
 	*/
 	private function getImageInfoFromDir($dir,$subdir='') {
-	
-
 		foreach($dir as $key => $value){
-   
 			if(!is_int($key)) {
-	
 				$this->getImageInfoFromDir($value,$subdir . $key . DIRECTORY_SEPARATOR);
-	
 			} else {
-	
 				$this->calculateSpriteWidthHeight($this->folders_config["origin"]["images"] . DIRECTORY_SEPARATOR . $subdir . $value);
 			}
 		}
@@ -186,15 +172,11 @@
 	* get the images info from array
 	*/
 	private function getImagesFromDir($dir,$subdir='') {
-  
 		foreach($dir as $key => $value){
-   
 			if(!is_int($key)) {
-	
 				$this->getImagesFromDir($value,$subdir . $key . DIRECTORY_SEPARATOR);
 	
 			} else {
-	
 				$this->proccessMedia($this->folders_config["origin"]["images"] . DIRECTORY_SEPARATOR . $subdir . $value);
 			}
 		}
@@ -204,14 +186,12 @@
 	* create the sprite
 	*/
 	private function createSprite($save_html = true, $redirect = true) {
-	
-
+		
 		$arrImages = $this->getSprites();
 
 		
 		if(count($arrImages)>0) {
 		
-
 			// calculate sprite width and height
 			$this->getImageInfoFromDir($arrImages); 
 		
@@ -238,7 +218,6 @@
 		
 		}
 		
-		
 		if ($redirect)
 		{
 			header('location:' . $this->folders_config['destiny']['example']);
@@ -254,9 +233,7 @@
 	* @return: object $this->temp 
 	*/
 	private function calculateSpriteWidthHeight($image) {
-  
 		if(is_file($image)) {
-   
       $arrImage = @getimagesize($image);
 			// updated by Aldo Conte			
 			$tmps =	$arrImage[0]+$this->temp_sep;
@@ -272,9 +249,7 @@
 	* @return: object $this->temp 
 	*/
 	private function proccessMedia($image) {
-  
 		if(is_file($image)) {
-   
             $arrImage = @getimagesize($image);
 			$this->temp_w = $arrImage[0];
 			$this->temp_h = $arrImage[1];
@@ -288,31 +263,22 @@
 			$gd_ext = substr($image, -3);
 			
 			if(strtolower($gd_ext) == "gif") {
-	
               if (!$this->temp = imagecreatefromgif($image)) {
-	 
                     exit;
               }
-	
             } else if(strtolower($gd_ext) == "jpg") {
-	
               if (!$this->temp = imagecreatefromjpeg($image)) {
-	 
                     exit;
               }
 	
             } else if(strtolower($gd_ext) == "png") {
-	
               if (!$this->temp = imagecreatefrompng($image)) {
-	 
                     exit;
               }
 	
             } else {
-	
                 die;
             }
-
 			imagecopyresampled($tmp, $this->im, 0, 0, 0, 0, $this->im_w, $this->im_h, $this->im_w, $this->im_h);
 			imagealphablending($tmp,true);
 			
@@ -364,7 +330,6 @@
   
 	// if filename contain "_hover" add the part of code
 		if(strpos($name,"_hover")===false) {
-   
 			$temp_html = '<h3>class: .sprite-' . $name . '</h3>';
 			$temp_html .= '<span class="sprite-each sprite-' . $name . '">';
 			$temp_html .= '</span>';
@@ -373,21 +338,18 @@
 	}
 	
 	private function saveSprite() {
-  
 		imagepng($this->im,$this->folders_config['destiny']['sprites'],3); 
 		return $this->im;
 		imagedestroy($this->im);
 	}
 	
 	private function saveCss() {
-  
 		$css_path = $this->folders_config['destiny']['styles'];
 		$css_img = '.sprite-each{background-image:url("' . $this->folders_config['destiny']['ini_path'] . $this->folders_config['destiny']['sprites'] . '");';
 		file_put_contents($css_path, $this->css_init . $this->temp_css . $css_img);
 	}
 	
 	private function saveHtml() {
-  
 		$html_path = $this->folders_config['destiny']['example'];
 		$html = '<link rel="stylesheet" href="'.$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['styles'].'">'.$this->temp_html;
 		file_put_contents($html_path,$html);
@@ -471,7 +433,6 @@
      * @return string
 	 */
 	public function setCssInit($style) {
-  
 		$this->css_init = $style.$this->temp_min_sep;
 	}
 	
