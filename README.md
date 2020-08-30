@@ -47,10 +47,10 @@ $pS->resizeCoefficient(0.7);
 $pS->setMinization();
 
 // define css style by default
-$css = 'body {backgound-color:#000;font-family:courier;color:#fff,font-size:14px;}';
-$pS->setCssInit($css, $class_prefix='mySprite');
+$pS->setCssInit($css ='body {backgound-color:#000; color:#fff; font-size:14px;}', $class_prefix='mySprite');
 
 // gen sprites, styles and html example
+set_time_limit(1000);
 $pS->getSprite($save_html=true, $redirect_to_html=true);
 ```
 
