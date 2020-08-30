@@ -29,8 +29,8 @@ $config = array(
 		"images" => "origin/images" // folder from where the script will take the images,
 		"include_subfolders" => true
 	),
-	// set destiny folder
-	"destiny" => array(
+	// set destination folder
+	"destination" => array(
 		"styles" => "destination/css/sprites.css", // define css style of sprites
 		"sprites" => "destination/sprites/sprites.png", // define the sprite image result
 		//"example" => "destination/example/sprites.html", // define the html example
