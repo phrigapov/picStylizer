@@ -53,15 +53,13 @@ $pS->getSprite($save_html=true, $redirect_to_html=true);
 Output source code will be like this:
 
 ```
-<link rel="stylesheet" href="../../sprites.css">
 <div class="sprite-each mySprite-image1"></div>
 <div class="sprite-each mySprite-image2"></div>
+<link rel="stylesheet" href="../../sprites.css">
+					↓
+				body {background-color:#000;font-family:courier;color:#fff;font-size:14px;}
+				.sprite-each{background-image:url("../../sprites.png"); 
+				.mySprite-image1 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
+				.mySprite-image2 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
 ...
-```
-sprites.css :
-```
-body {background-color:#000;font-family:courier;color:#fff;font-size:14px;}.sprite-each{background-image:url("../../sprites.png"); 
-.mySprite-image1 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
-.mySprite-image2 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
-...
-```
+``` 
