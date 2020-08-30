@@ -3,6 +3,7 @@
 picStylizer is a PHP class that create sprite and css style file from images folder
 
 Notice: if you want to change the image onMouseOver (hover) you have add "_hover" at the end of filename before the extention
+```
 Example: 
 // initial image
 icon.png
@@ -11,6 +12,7 @@ icon_hover.png //adding _hover
 // the result css code will be:
 .icon {...}
 .icon:hover {...}
+```
 
 # Usage
 
@@ -24,14 +26,16 @@ $pS = new picStylizer();
 $config = array(
 	// set the origin folder
 	"origin" => array(
-		"images" => "origin/images" // folder from where the script will take the images
+		"images" => "origin/images" // folder from where the script will take the images,
+		"include_subfolders" => true
 	),
 	// set destiny folder
 	"destiny" => array(
-		"styles" => "destiny/css/sprites.css", // define css style of sprites
-		"sprites" => "destiny/sprites/sprites.png", // define the sprite image result
-		"example" => "destiny/example/sprites.html", // define the html example
-		"ini_path" => "../../" // define the path
+		"styles" => "destination/css/sprites.css", // define css style of sprites
+		"sprites" => "destination/sprites/sprites.png", // define the sprite image result
+		//"example" => "destination/example/sprites.html", // define the html example
+		"rel_path_to_sprite_image" => "./mysubdir/", // define the path
+		"rel_path_to_sprite_css" => "./mysubdir/"    // define the path
 	)
 );
 $pS->setFoldersConfig($config);
@@ -60,7 +64,7 @@ Output source code will be like this:
 <link rel="stylesheet" href="../../sprites.css">
 					↓
 				body {background-color:#000;font-family:courier;color:#fff;font-size:14px;}
-				.sprite-each{background-image:url("../../sprites.png"); 
+				.sprite-each{background-image:url("./mysubdir/sprites.png"); 
 				.mySprite-image1 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
 				.mySprite-image2 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
 ...
