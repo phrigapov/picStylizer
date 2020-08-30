@@ -16,73 +16,73 @@
  class picStylizer {
  
 	/**
-     * @var string The image result source
-     */
-    private $im;
+	 * @var string The image result source
+	 */
+	private $im;
 	
 	/**
-     * @var int W image
-     */
+	 * @var int W image
+	 */
 	private $im_w = 0;
 	
 	/**
-     * @var int H image
-     */
+	 * @var int H image
+	 */
 	private $im_h = 0;
 	
 	/**
-     * @var int X image
-     */
+	 * @var int X image
+	 */
 	private $im_x = 0;
 	
 	/**
-     * @var int Y image
-     */
+	 * @var int Y image
+	 */
 	private $im_y = 0;
 	
 	/**
-     * @var string The image tmp result source
-     */
-    private $temp;
+	 * @var string The image tmp result source
+	 */
+	private $temp;
 	
 	/**
-     * @var int W temp
-     */
+	 * @var int W temp
+	 */
 	private $temp_w = 0;
 	
 	/**
-     * @var int H temp
-     */
+	 * @var int H temp
+	 */
 	private $temp_h = 0;
 	
 	/**
-     * @var int temp separation in px
-     */
+	 * @var int temp separation in px
+	 */
 	private $temp_sep = 2;
 	
 	/**
-     * @var string temp_css
-     */
+	 * @var string temp_css
+	 */
 	private $temp_css = '';
 	
 	/**
-     * @var string temp_css
-     */
+	 * @var string temp_css
+	 */
 	private $temp_min_sep = "\n";
 
 	/**
-     * @var string temp_html
-     */
+	 * @var string temp_html
+	 */
 	private $temp_html = '';
 	
 	/**
-     * @var string version
-     */
+	 * @var string version
+	 */
 	private $version = '1.1';
 	
 	/**
-     * @var array folders_config folder
-     */
+	 * @var array folders_config folder
+	 */
 	private $folders_config = array(
 								"origin" => array(
 									"images" => "origin/images"
@@ -100,8 +100,8 @@
 	private $css_init = '';
 	
 	/**
-     * @var array sprites
-     */
+	 * @var array sprites
+	 */
 	private $sprites = array();
 	
 	/*
@@ -110,8 +110,8 @@
 	*/
 	
 	public function getSprite()
-    {
-    
+	{
+	
 		// first read the origin folder looking for png pictures
 		$arrImages = $this->readFolder($this->folders_config["origin"]["images"]);
 		
@@ -121,7 +121,7 @@
 		// create the sprite
 		$this->createSprite();
 
-    }
+	}
 	
 	/*
 	* read folder looking for images
@@ -232,7 +232,7 @@
 	*/
 	private function calculateSpriteWidthHeight($image) {
 		if(is_file($image)) {
-      $arrImage = @getimagesize($image);
+	  $arrImage = @getimagesize($image);
 			// updated by Aldo Conte			
 			$tmps =	$arrImage[0]+$this->temp_sep;
 			if ($tmps > $this->im_w) $this->im_w = $arrImage[0]+$this->temp_sep;
@@ -248,7 +248,7 @@
 	*/
 	private function proccessMedia($image) {
 		if(is_file($image)) {
-            $arrImage = @getimagesize($image);
+			$arrImage = @getimagesize($image);
 			$this->temp_w = $arrImage[0];
 			$this->temp_h = $arrImage[1];
 			
@@ -261,20 +261,20 @@
 			$gd_ext = substr($image, -3);
 			
 			if(strtolower($gd_ext) == "gif") {
-              if (!$this->temp = imagecreatefromgif($image)) {
-                    exit;
-              }
-            } else if(strtolower($gd_ext) == "jpg") {
-              if (!$this->temp = imagecreatefromjpeg($image)) {
-                    exit;
-              }
-            } else if(strtolower($gd_ext) == "png") {
-              if (!$this->temp = imagecreatefrompng($image)) {
-                    exit;
-              }
-            } else {
-                die;
-            }
+			  if (!$this->temp = imagecreatefromgif($image)) {
+					exit;
+			  }
+			} else if(strtolower($gd_ext) == "jpg") {
+			  if (!$this->temp = imagecreatefromjpeg($image)) {
+					exit;
+			  }
+			} else if(strtolower($gd_ext) == "png") {
+			  if (!$this->temp = imagecreatefrompng($image)) {
+					exit;
+			  }
+			} else {
+				die;
+			}
 
 			imagecopyresampled($tmp, $this->im, 0, 0, 0, 0, $this->im_w, $this->im_h, $this->im_w, $this->im_h);
 			imagealphablending($tmp,true);
@@ -301,8 +301,8 @@
 			$this->im_y += $this->temp_h+$this->temp_sep;
 			
 		} else {
-            die;
-        }
+			die;
+		}
 	}
 	
 	private function genCssPieceCode($name) {
@@ -347,69 +347,69 @@
  
 
 	/**
-     * Set the image temp result
-     * @var object $temp
-     * @return object
+	 * Set the image temp result
+	 * @var object $temp
+	 * @return object
 	 */
 	private function setTemp($temp)
-    {
+	{
 		return $this->temp = $temp;
 	}
  
 	/**
-     * Get the image temp result
-     * 
-     * @return object
+	 * Get the image temp result
+	 * 
+	 * @return object
 	 */
 	private function getImageTemp()
-    {
+	{
 		return $this->temp;
 	}
  
 	/**
-     * Set the image result
-     * @var object $image
-     * @return object
+	 * Set the image result
+	 * @var object $image
+	 * @return object
 	 */
 	private function setImage($image)
-    {
+	{
 		return $this->im = $image;
 	}
  
 	/**
-     * Get the image result
-     * 
-     * @return object
+	 * Get the image result
+	 * 
+	 * @return object
 	 */
 	private function getImage()
-    {
+	{
 		return $this->im;
 	}
 
 	/**
-     * Set sprites array
-     * 
-     * @return array
+	 * Set sprites array
+	 * 
+	 * @return array
 	 */
 	private function setSprite($sprites)
-    {
+	{
 		return $this->sprites = $sprites;
 	}
 	
 	/**
-     * Get sprites array
-     * 
-     * @return array
+	 * Get sprites array
+	 * 
+	 * @return array
 	 */
 	private function getSprites()
-    {
+	{
 		return $this->sprites;
 	}
 		
 	/**
-     * Set css obfuscation
-     * 
-     * @return string
+	 * Set css obfuscation
+	 * 
+	 * @return string
 	 */
 	public function setMinization($obs = true) {
 		if($obs) $this->temp_min_sep = '';
@@ -417,21 +417,21 @@
 	}
 	
 	/**
-     * Set css init
-     * 
-     * @return string
+	 * Set css init
+	 * 
+	 * @return string
 	 */
 	public function setCssInit($style) {
 		$this->css_init = $style.$this->temp_min_sep;
 	}
 	
 	/**
-     * Set folder config array
-     * 
-     * @return array
+	 * Set folder config array
+	 * 
+	 * @return array
 	 */
 	public function setFoldersConfig($config)
-    {
+	{
 		return $this->folders_config = $config;
 	}
  
