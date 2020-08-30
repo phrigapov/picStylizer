@@ -1,5 +1,7 @@
 <?php
 
+exit("comment this line"); // comment this line to test the file.
+
 include('picStylizer.php');
 
 // initialize
@@ -7,18 +9,18 @@ $pS = new picStylizer();
 
 // define folder configuration
 $config = array(
-			// set the origin folder
-			"origin" => array(
-				"images" => "origin/images" // folder from where the script will take the images
-			),
-			// set destiny folder
-			"destiny" => array(
-				"styles" => "destiny/css/sprites.css", // define css style of sprites
-				"sprites" => "destiny/sprites/sprites.png", // define the sprite image result
-				"example" => "destiny/example/sprites.html", // define the html example
-				"ini_path" => "../../" // define the path
-			)
-		);
+	// set the origin folder
+	"origin" => array(
+		"images" => "origin/images" // folder from where the script will take the images
+	),
+	// set destiny folder
+	"destiny" => array(
+		"styles" => "destiny/css/sprites.css", // define css style of sprites
+		"sprites" => "destiny/sprites/sprites.png", // define the sprite image result
+		"example" => "destiny/example/sprites.html", // define the html example
+		"ini_path" => "../../" // define the path
+	)
+);
 $pS->setFoldersConfig($config);
 
 // define minization [true/false] (default: true)
