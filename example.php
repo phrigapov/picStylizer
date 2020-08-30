@@ -2,9 +2,9 @@
 
 exit("comment this line"); // comment this line when you want to test this file
 
-include('picStylizer.php');
+include("./picStylizer.php");
 
-// initialize
+// Initialize Class
 $pS = new picStylizer();
 
 // define folder configuration
@@ -23,12 +23,15 @@ $config = array(
 );
 $pS->setFoldersConfig($config);
 
-// define minization [true/false] (default: true)
+// resize images
+$pS->resizeCoefficient(0.7);
+
+// define minization (default: true)
 $pS->setMinization();
 
-// define css style by default (it will add to the sprites.css file)
-$css = 'body {background-color:#000;font-family:courier;color:#fff;font-size:14px;}';
-$pS->setCssInit($css);
+// define css style by default
+$css = 'body {backgound-color:#000;font-family:courier;color:#fff,font-size:14px;}';
+$pS->setCssInit($css, $class_prefix='mySprite');
 
 // gen sprites, styles and html example
-$pS->getSprite();
+$pS->getSprite($save_html=true, $redirect_to_html=true);
