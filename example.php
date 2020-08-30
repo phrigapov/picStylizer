@@ -1,6 +1,6 @@
 <?php
 
-exit("comment this line"); // comment this line to test the file.
+exit("comment this line"); // comment this line when you want to test this file
 
 include('picStylizer.php');
 
