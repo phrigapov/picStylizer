@@ -34,8 +34,8 @@ $config = array(
 		"styles" => "destination/css/sprites.css", // define css style of sprites
 		"sprites" => "destination/sprites/sprites.png", // define the sprite image result
 		//"example" => "destination/example/sprites.html", // define the html example
-		"rel_path_to_sprite_image" => "./mysubdir/", // define the path
-		"rel_path_to_sprite_css" => "./mysubdir/"    // define the path
+		"rel_path_to_sprite_image" => "./", // define the path
+		"rel_path_to_sprite_css" => "./"    // define the path
 	)
 );
 $pS->setFoldersConfig($config);
@@ -61,10 +61,10 @@ Output source code will be like this:
 ```
 <div class="sprite-each mySprite-image1"></div>
 <div class="sprite-each mySprite-image2"></div>
-<link rel="stylesheet" href="../../sprites.css">
+<link rel="stylesheet" href="./sprites.css">
 					↓
 				body {background-color:#000;font-family:courier;color:#fff;font-size:14px;}
-				.sprite-each{background-image:url("./mysubdir/sprites.png"); 
+				.sprite-each{background-image:url("./sprites.png"); 
 				.mySprite-image1 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
 				.mySprite-image2 {background-position: 0 -XXX; background-repeat:no-repeat;width:XXX; height:XXX}
 ...
