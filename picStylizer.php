@@ -183,9 +183,9 @@
 	}
 	
 	/*
-	* get the images info from array
+	* resize image to coefficient
 	*/
-	public function resizeCoefficient($coefficient=1) {
+	public function resizeCoefficient($coefficient=1.0) {
 		$this->coeff = $coefficient;
 	}
 	
