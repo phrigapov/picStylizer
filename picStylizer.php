@@ -322,7 +322,7 @@
         // updated by Aldo Conte
         $temp_css_detail = "background-position: 0 -" . $this->im_y . "px; background-repeat:no-repeat;" . $this->temp_min_sep;
         // end
-        $temp_css_detail .= "width:" . $this->temp_w*$this->coeff . "px; height:" . $this->temp_h*$this->coeff . "px" . $this->temp_min_sep;
+        $temp_css_detail .= "width:" . $this->temp_w*$this->coeff . "px; height:" . $this->temp_h*$this->coeff . "px;" . $this->temp_min_sep;
         $temp_css = "." . $this->class_prefix . $name . " {" . $temp_css_detail . "}" . $this->temp_min_sep;
         $this->temp_css .= $temp_css;
 	}
