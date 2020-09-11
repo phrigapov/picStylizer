@@ -3,7 +3,7 @@
 /**
  * Create a Css style and sprite from images
  * 
- * @version 1.1
+ * @version 1.2
  * @link https://github.com/lutian/picStylizer
  * @author Lutian (Luciano Salvino)
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -85,13 +85,14 @@
      */
 	private $folders_config = array(
 								"origin" => array(
-									"images" => "origin/images"
-								),
-								"destiny" => array(
-									"styles" => "destiny/css/sprites.css",
-									"sprites" => "destiny/sprites/sprites.png",
-									"example" => "destiny/example/sprites.html",
-									"ini_path" => "../../"
+									"images" => "origin/images",
+									"include_subfolders" => true
+								), 
+								"destination" => array(
+									"styles" => "destination/css/sprites.css",
+									"sprites" => "destination/sprites/sprites.png",
+									"rel_path_to_sprite_image" => "./",
+									"example" => "destination/example/sprites.html",
 								)
 							);
 	/*
@@ -109,7 +110,7 @@
 	* @return: string $imageResult image result path
 	*/
 	
-	public function getSprite()
+	public function getSprite($save_html = true, $redirect = true)
     {
     
 		// first read the origin folder looking for png pictures
@@ -119,7 +120,7 @@
 		$this->setSprite($arrImages);
 		
 		// create the sprite
-		$this->createSprite();
+		$this->createSprite($save_html, $redirect);
 
     }
 	
@@ -139,7 +140,8 @@
 				// if have sub folders loop on the same function
 				if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
 				{ 
-					$result[$value] = $this->readFolder($dir . DIRECTORY_SEPARATOR . $value); 
+					if ($this->folders_config["origin"]["include_subfolders"])
+						$result[$value] = $this->readFolder($dir . DIRECTORY_SEPARATOR . $value); 
 				} 
 				else 
 				{ 
@@ -154,6 +156,12 @@
 		   
 		return $result; 
 	}
+	
+	
+	/*
+	* Include subfolders or not
+	*/
+	
 	
 	/*
 	* get the images info from array
@@ -183,9 +191,16 @@
 	}
 	
 	/*
+	* resize image to coefficient
+	*/
+	public function resizeCoefficient($coefficient=1.0) {
+		$this->coeff = $coefficient;
+	}
+	
+	/*
 	* create the sprite
 	*/
-	private function createSprite() {
+	private function createSprite($save_html = true, $redirect = true) {
 	
 		$arrImages = $this->getSprites();
 
@@ -196,7 +211,7 @@
 			$this->getImageInfoFromDir($arrImages); 
 		
 			// create the empty sprite 
-			$this->im = imagecreatetruecolor($this->im_w, $this->im_h);
+			$this->im = imagecreatetruecolor($this->im_w*$this->coeff, $this->im_h*$this->coeff);
 			imagealphablending($this->im, false);
 			$transparency = imagecolorallocatealpha($this->im, 0, 0, 0, 127);
 			imagefill($this->im, 0, 0, $transparency);
@@ -214,14 +229,17 @@
 			$this->saveCss();
 			
 			// save the example html
-			$this->saveHtml();
+			if ($save_html) $this->saveHtml();
 		
 		}
 		
 		
 		
-		header('location:'.$this->folders_config['destiny']['example']);
-		exit();
+		if ($redirect)
+        {
+            header('location:' . $this->folders_config['destination']['example']);
+            exit();
+        }
 	
 	}
 	
@@ -252,10 +270,10 @@
 			$this->temp_w = $arrImage[0];
 			$this->temp_h = $arrImage[1];
 			
-			$tmp = ImageCreateTrueColor($this->im_w, $this->im_h);
+			$tmp = ImageCreateTrueColor($this->im_w*$this->coeff, $this->im_h*$this->coeff);
 			imagealphablending($tmp, false);
 			$col=imagecolorallocatealpha($tmp,255,255,255,0);
-			imagefilledrectangle($tmp,0,0,$this->im_w, $this->im_h,$col);
+			imagefilledrectangle($tmp,0,0,$this->im_w*$this->coeff, $this->im_h*$this->coeff,$col);
 			imagealphablending($tmp,true);
 			
 			$gd_ext = substr($image, -3);
@@ -275,14 +293,14 @@
             } else {
                 die;
             }
-
-			imagecopyresampled($tmp, $this->im, 0, 0, 0, 0, $this->im_w, $this->im_h, $this->im_w, $this->im_h);
+			
+			imagecopyresampled($tmp, $this->im, 0, 0, 0, 0, $this->im_w*$this->coeff, $this->im_h*$this->coeff, $this->im_w, $this->im_h);
 			imagealphablending($tmp,true);
 			
 			// add each image to sprite
 			
 			// updated by Aldo Conte
-			imagecopyresampled($this->im, $this->temp, 0, $this->im_y, 0, 0, $this->temp_w, $this->temp_h, $this->temp_w, $this->temp_h);  
+			imagecopyresampled($this->im, $this->temp, 0, $this->im_y, 0, 0, $this->temp_w*$this->coeff, $this->temp_h*$this->coeff, $this->temp_w, $this->temp_h);  
 			// end
 			
 			imagealphablending($this->im,true);
@@ -297,8 +315,8 @@
 			// add piece of script to html example
 			$this->genHtmlPieceCode($filename);
 			
-			$this->im_x += $this->temp_w+$this->temp_sep;
-			$this->im_y += $this->temp_h+$this->temp_sep;
+			$this->im_x += $this->temp_w*$this->coeff+$this->temp_sep;
+			$this->im_y += $this->temp_h*$this->coeff+$this->temp_sep;
 			
 		} else {
             die;
@@ -308,40 +326,41 @@
 	private function genCssPieceCode($name) {
 		// if filename contain "_hover" add the part of code
 		if(strpos($name,"_hover")!==false) $name = substr($name,0,-6).':hover';
-		
-		// updated by Aldo Conte
-		$temp_css_detail = "background:url('".$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['sprites']."') 0 -".$this->im_y."px no-repeat;".$this->temp_min_sep;
-		// end
-		
-		$temp_css_detail .= "width:".$this->temp_w."px; height:".$this->temp_h."px".$this->temp_min_sep;
-		$temp_css = ".".$name." {".$temp_css_detail."}".$this->temp_min_sep;
-		$this->temp_css .= $temp_css;
+
+        // updated by Aldo Conte
+        $temp_css_detail = "background-position: 0 -" . $this->im_y . "px; background-repeat:no-repeat;" . $this->temp_min_sep;
+        // end
+        $temp_css_detail .= "width:" . $this->temp_w*$this->coeff . "px; height:" . $this->temp_h*$this->coeff . "px;" . $this->temp_min_sep;
+        $temp_css = "." . $this->class_prefix . $name . " {" . $temp_css_detail . "}" . $this->temp_min_sep;
+        $this->temp_css .= $temp_css;
 	}
 	
 	private function genHtmlPieceCode($name) {
-	// if filename contain "_hover" add the part of code
-		if(strpos($name,"_hover")===false) {
-			$temp_html = '<h3>class: '.$name.'</h3>';
-			$temp_html .= '<div class="'.$name.'">';
-			$temp_html .= '</div>';
-			$this->temp_html .= $temp_html;	
-		}
+        // if filename contain "_hover" add the part of code
+        if (strpos($name, "_hover") === false)
+        {
+            $temp_html = '<h3>class: .' . $this->class_prefix . $name . '</h3>';
+            $temp_html .= '<div class="'.$this->class_prefix.'each ' . $this->class_prefix . $name . '">';
+            $temp_html .= '</div>';
+            $this->temp_html .= $temp_html;
+        }
 	}
 	
 	private function saveSprite() {
-		imagepng($this->im,$this->folders_config['destiny']['sprites'],3); 
+		imagepng($this->im,$this->folders_config['destination']['sprites'],3); 
 		return $this->im;
 		imagedestroy($this->im);
 	}
 	
 	private function saveCss() {
-		$css_path = $this->folders_config['destiny']['styles'];
-		file_put_contents($css_path,$this->css_init.$this->temp_css);
+        $css_path = $this->folders_config['destination']['styles'];
+        $css_img = '.'.$this->class_prefix.'each{background-image:url("' . $this->folders_config['destination']['rel_path_to_sprite_image'] . basename($this->folders_config['destination']['sprites']) . '");';
+        file_put_contents($css_path, $this->css_init . $this->temp_css . $css_img);
 	}
 	
 	private function saveHtml() {
-		$html_path = $this->folders_config['destiny']['example'];
-		$html = '<link rel="stylesheet" href="'.$this->folders_config['destiny']['ini_path'].$this->folders_config['destiny']['styles'].'">'.$this->temp_html;
+		$html_path = $this->folders_config['destination']['example'];
+		$html = '<link rel="stylesheet" href="'.$this->folders_config['destination']['rel_path_to_sprite_css']. basename($this->folders_config['destination']['styles']).'">'.$this->temp_html;
 		file_put_contents($html_path,$html);
 	}
  
@@ -421,8 +440,9 @@
      * 
      * @return string
 	 */
-	public function setCssInit($style) {
-		$this->css_init = $style.$this->temp_min_sep;
+	public function setCssInit($style, $class_prefix) {
+		$this->class_prefix = empty($class_prefix) ? "" : $class_prefix.'-';
+        $this->css_init = $style . $this->temp_min_sep;
 	}
 	
 	/**
