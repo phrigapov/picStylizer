@@ -1,6 +1,6 @@
-<?phpinclude("./picStylizer.php");
+<?php
+include("./picStylizer.php");
 
-// Initialize Class
 $pS = new picStylizer();
 
 // define folder configuration
@@ -21,6 +21,8 @@ $config = array(
 );
 $pS->setFoldersConfig($config);
 
+print_r($pS);
+
 // resize images
 $pS->resizeCoefficient(0.7);
 
@@ -33,4 +35,6 @@ $pS->setCssInit($css ='body {backgound-color:#000; color:#fff; font-size:14px;}'
 // gen sprites, styles and html example
 set_time_limit(1000);
 $pS->getSprite($save_html=true, $redirect_to_html=true);
+
+
 ?>

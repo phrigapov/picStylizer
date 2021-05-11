@@ -115,7 +115,7 @@
     
 		// first read the origin folder looking for png pictures
 		$arrImages = $this->readFolder($this->folders_config["origin"]["images"]);
-		
+		print_r($arrImages);
 		// save images array
 		$this->setSprite($arrImages);
 		
@@ -350,6 +350,7 @@
 		imagepng($this->im,$this->folders_config['destination']['sprites'],3); 
 		return $this->im;
 		imagedestroy($this->im);
+		//echo 'salvou';
 	}
 	
 	private function saveCss() {
